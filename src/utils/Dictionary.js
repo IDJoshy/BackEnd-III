@@ -1,5 +1,3 @@
-
-
 const errors = 
 {
     //#region general
@@ -44,6 +42,12 @@ const errors =
         code: 'NOT_FOUND',
         message: 'Not found',
         status: 404
+    },
+    SERVICE_UNAVAILABLE: 
+    {
+        code: 'SERVICE_UNAVAILABLE',
+        message: 'Could not reach server',
+        status: 503
     },
     //#endregion
 

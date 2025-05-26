@@ -1,9 +1,11 @@
 import AppError from "./AppError.js";
+import { logger } from '../app.js';
 
 const errorHandler = (err, res) =>
 {
     if(err instanceof AppError)
     {
+        logger.error(`[${err.code}] ${err.message} - ${JSON.stringify(err.etc || {})}`);
         return res.status(err.status).json({
             error: err.code,
             message: err.message,
@@ -12,8 +14,8 @@ const errorHandler = (err, res) =>
     }
     else
     {
-        console.error(err);
-        res.status(500).json(
+        logger.fatal(`Unexpected error: ${err.message} \nStack: ${err.stack}`);
+        return res.status(500).json(
         {
             error: 'INTERNAL_SERVER_ERROR',
             message: 'an unknown error has occurred'

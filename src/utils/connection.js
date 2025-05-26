@@ -1,15 +1,23 @@
 import mongoose from 'mongoose';
+import { logger } from '../app.js';
+import AppError from './AppError.js';
 
 const connection = async(url, dbName) => 
 {
     try
     {
         await mongoose.connect(url, {dbName:dbName});
-        console.log("Connected to Cluster in: " + url + " database: " + dbName);
+        logger.info(`Connected to Cluster at ${url}, database: ${dbName}`);
     }
-    catch(error)
+    catch(e)
     {
-        console.log(`Error connecting to Cluster: ${error.message}`);
+        
+        const error = new AppError("SERVICE_UNAVAILABLE", {
+            message: "Error connecting to MongoDB Cluster",
+            original: e.message
+        });
+        logger.fatal(`[${error.code}] ${error.message} - ${error.etc.original}`);
+        logger.end();
         process.exit(1);
     }   
 }
